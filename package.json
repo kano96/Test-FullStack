@@ -1,0 +1,23 @@
+{
+  "name": "test-fullstack",
+  "version": "1.0.0",
+  "description": "Por medio de este test se evaluarán algunos de tus conocimientos que nos interesan como desarrollador.",
+  "main": "codigo.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kano96/Test-FullStack.git"
+  },
+  "author": "Kevin Torres",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kano96/Test-FullStack/issues"
+  },
+  "homepage": "https://github.com/kano96/Test-FullStack#readme",
+  "dependencies": {
+    "jest": "^29.5.0"
+  }
+}
