@@ -120,3 +120,48 @@ export function createTransfer(licensePlate, email) {
 
   return { message: "La transferencia ha sido creada exitosamente", transfers };
 }
+
+// Ejercicio 3
+function getInProgressTransfer(licensePlate, email) {
+  return transfers.find(
+    (transfer) =>
+      transfer.licensePlate === licensePlate &&
+      transfer.email === email &&
+      transfer.status !== "ABORTADA" &&
+      transfer.status !== "FINALIZADA"
+  );
+}
+
+function changeTransferStatusToAbort(otherTransfer) {
+  const transferToUpdate = transfers.find(
+    (transfer) => transfer.id === otherTransfer.id
+  );
+  transferToUpdate.status = "ABORTADA";
+}
+
+export function payTransfer(licensePlate, email) {
+  const paidTransfer = validatePaidTransfer(licensePlate);
+
+  if (paidTransfer) {
+    return "Ya existe una transferencia pagada para esta patente";
+  }
+  const inProgressTransfer = getInProgressTransfer(licensePlate, email);
+  if (!inProgressTransfer) {
+    return "No existe una transferencia en progreso para esta patente y correo";
+  }
+
+  inProgressTransfer.status = "PAGADA";
+
+  const otherTransfers = transfers.filter(
+    (transfer) =>
+      transfer.licensePlate === licensePlate &&
+      transfer.email !== email &&
+      transfer.status !== "ABORTADA" &&
+      transfer.status !== "FINALIZADA"
+  );
+  otherTransfers.forEach((otherTransfer) => {
+    changeTransferStatusToAbort(otherTransfer);
+  });
+
+  return transfers;
+}
