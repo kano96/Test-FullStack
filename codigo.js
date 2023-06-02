@@ -64,3 +64,59 @@ const transfers = [
 export function getTransfersByEmail(email) {
   return transfers.filter((transfer) => transfer.email === email);
 }
+
+// Ejercicio 2
+function validateLicencePlate(licensePlate) {
+  const validLicensePlate = /^[A-Za-z]{4}\d{2}|\^[A-Za-z]{2}\d{4}$/;
+  return validLicensePlate.test(licensePlate);
+}
+
+function validatePaidTransfer(licensePlate) {
+  const paidTransfer = transfers.find(
+    (transfer) =>
+      transfer.licensePlate === licensePlate && transfer.status === "PAGADA"
+  );
+
+  return !!paidTransfer;
+}
+
+function checkForInProgressTransfer(licensePlate, email) {
+  const inProgressTransfer = transfers.find(
+    (transfer) =>
+      transfer.licensePlate === licensePlate &&
+      transfer.email === email &&
+      transfer.status !== "ABORTADA" &&
+      transfer.status !== "FINALIZADA"
+  );
+  return !!inProgressTransfer;
+}
+
+export function createTransfer(licensePlate, email) {
+  const isValidPlate = validateLicencePlate(licensePlate);
+
+  if (!isValidPlate) {
+    return "La patente ingresada no es válida";
+  }
+
+  const isPaidTransfer = validatePaidTransfer(licensePlate);
+
+  if (isPaidTransfer) {
+    return "Ya existe una transferencia pagada para esta patente";
+  }
+
+  const transferIsInProgress = checkForInProgressTransfer(licensePlate, email);
+
+  if (transferIsInProgress) {
+    return "Ya existe una transferencia en progreso para esta patente y correo";
+  }
+
+  const newTransfer = {
+    id: transfers.length + 1,
+    licensePlate,
+    email,
+    status: "CREADA",
+  };
+  transfers.push(newTransfer);
+
+  return { message: "La transferencia ha sido creada exitosamente", transfers };
+}
